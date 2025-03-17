@@ -24,10 +24,36 @@ Retorna todos os cursos e suas informações básicas.
 Cadastra um novo curso.
 
 Exige token de acesso (exclusivo para adminsitradores).
+
+{
+
+    "code_curso": "ABCD",
+
+    "nome_curso": "Técnico em Alguma Coisa",
+
+    "desc_curso": "descrição",
+
+    "mcc": "atalho matriz curricular",
+
+    "ppc": "atalho ppc"
+
+}
 ### [PUT] /curso/id
 Atualiza os dados de algum curso (via id).
 
 Exige token de acesso.
+
+{
+
+    "nome_curso": "Novo Nome",
+
+    "desc_curso": "nova descrição",
+
+    "mcc": "atalho nova mcc",
+
+    "ppc": "atalho novo ppc"
+
+}
 ### [DELETE] /curso/id
 Remove o curso selecionado do BD.
 
@@ -62,3 +88,16 @@ Exige token de acesso.
 Remove uma imagem do BD.
 
 Exige token de acesso.
+### [POST] /login
+Permite o acesso de contas autorizadas à parte administratva.
+
+
+BODY:
+
+{
+
+    "email_admin": "teste@email.com",
+
+    "senha_admin": "senhateste"
+
+}

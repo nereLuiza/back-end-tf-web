@@ -23,7 +23,7 @@ router.get("/cursos", async (req, res) => {
     console.log("Rota POST /curso solicitada");
     try {
       await insertCurso(req.body);
-      res.status(201).json({ message: "Usuário inserido com sucesso!" });
+      res.status(201).json({ message: "Curso inserido com sucesso!" });
     } catch (error) {
       res.status(error.status || 500).json({ message: error.message || "Erro!" });
     }
@@ -33,7 +33,7 @@ router.get("/cursos", async (req, res) => {
     console.log("Rota DELETE /curso/# solicitada");
     try {
         await deleteCurso(req.params.code_curso);
-        res.status(200).json({ message: "Usuário excluido com sucesso!!" });
+        res.status(200).json({ message: "Curso excluido com sucesso!!" });
     } catch (error) {
       res.status(error.status || 500).json({ message: error.message || "Erro!" });
     }
