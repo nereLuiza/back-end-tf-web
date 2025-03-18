@@ -43,7 +43,7 @@ router.get("/imgs", async (req, res) => {
     console.log("Rota PUT /img/# solicitada");
     try {
         const code_img = req.params.code_img;
-        await updatePgt(num_pgt, req.body);
+        await updatePgt(req.body, code_img);
         res.status(200).json({ message: "Imagem alterada com sucesso!" });
     } catch (error) {
       console.log(error);

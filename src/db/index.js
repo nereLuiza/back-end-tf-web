@@ -53,35 +53,57 @@ async function selectPgt() {
   return res.rows;
 }
 
-async function insertPgt(data) {
+async function insertPgt(data, datalt) {
   const client = await connect();
-  const query = "INSERT INTO Perguntas (num_pgt, conteudo) VALUES ($1, $2)";
-  const pergunta = [data.num_pgt, data.conteudo];
-  await client.query(query, pergunta);
-  client.release();
 
-  async function insertAlternativas(datalt) {
-    client = await connect();
-    const query2 = "INSERT INTO Alternativas (num_pgt, valor, conteudo) VALUES ($1, $2, $3)";
-    const alternativa = [data.num_pgt, datalt.valor, datalt.conteudo];
-    await client.query(query2, alternativa);
-    client.release();
+  try {
+      await client.query("BEGIN");
+
+      const query = "INSERT INTO Perguntas (num_pgt, conteudo) VALUES ($1, $2) RETURNING num_pgt";
+      const perguntaValues = [data.num_pgt, data.conteudo];
+      const res = await client.query(query, perguntaValues);
+      const num_pgt = res.rows[0].num_pgt;
+
+      for (const alternativa of datalt) {
+          const query2 = "INSERT INTO Alternativas (num_pgt, valor, conteudo) VALUES ($1, $2, $3)";
+          const alternativaValues = [num_pgt, alternativa.valor, alternativa.conteudo];
+          await client.query(query2, alternativaValues);
+      }
+
+      await client.query("COMMIT");
+      client.release();
+
+  } catch (error) {
+      await client.query("ROLLBACK");
+      client.release();
+      throw error;
   }
 }
 
-async function updatePgt(data, id) {
+async function updatePgt(data, datalt, id) {
   const client = await connect();
-  const query = "UPDATE Perguntas SET conteudo = $1 WHERE num_pgt = $2";
-  const pergunta = [data.conteudo, id];
-  await client.query(query, pergunta);
-  client.release();
 
-  async function updateAlternativas(datalt) {
-    client = await connect();
-    const query2 = "UPDATE Alternativas SET conteudo = $1, valor = $2 WHERE num_pgt = $3";
-    const alternativa = [datalt.conteudo, datalt.valor, data,num_pgt];
-    await client.query(query2, alternativa);
-    client.release();
+  try {
+      await client.query("BEGIN");
+
+      const query = "UPDATE Perguntas SET conteudo = $1 WHERE num_pgt = $2";
+      await client.query(query, [data.conteudo, id]);
+
+      const deleteAlternativasQuery = "DELETE FROM Alternativas WHERE num_pgt = $1";
+      await client.query(deleteAlternativasQuery, [id]);
+
+      for (const alternativa of datalt) {
+          const query2 = "INSERT INTO Alternativas (num_pgt, valor, conteudo) VALUES ($1, $2, $3)";
+          await client.query(query2, [id, alternativa.valor, alternativa.conteudo]);
+      }
+
+      await client.query("COMMIT");
+      client.release();
+
+  } catch (error) {
+      await client.query("ROLLBACK");
+      client.release();
+      throw error;
   }
 }
 
@@ -90,6 +112,12 @@ async function deletePgt(id) {
   const query = "DELETE FROM Perguntas WHERE num_pgt = $1";
   await client.query(query, [id]);
   client.release();
+
+  async function deleteAlternativas() {
+    const query2 = "DELETE FROM Alternativas WHERE num_pgt = $1";
+    await client.query(query2, [id]);
+    client.release();
+  }
 }
 
 async function selectImgs() {

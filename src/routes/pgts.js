@@ -22,12 +22,20 @@ router.get("/pgts", async (req, res) => {
   router.post("/pgt", verificarAutenticacao, async (req, res) => {
     console.log("Rota POST /pgt solicitada");
     try {
-      await insertPgt(req.body);
-      res.status(201).json({ message: "Pergunta inserida com sucesso!" });
-    } catch (error) {
-      res.status(error.status || 500).json({ message: error.message || "Erro!" });
-    }
-  });
+      const { pergunta, alternativas } = req.body;
+
+      if (!pergunta || !alternativas || !Array.isArray(alternativas)) {
+          return res.status(400).json({ erro: "Dados inválidos" });
+      }
+
+      await insertPgt(pergunta, alternativas);
+      res.status(201).json({ mensagem: "Pergunta e alternativas inseridas com sucesso!" });
+
+  } catch (error) {
+      console.error("Erro ao inserir pergunta:", error);
+      res.status(500).json({ erro: "Erro interno ao inserir pergunta" });
+  }
+});
 
   router.delete("/pgt/:num_pgt", verificarAutenticacao, async (req, res) => {
     console.log("Rota DELETE /pgt/# solicitada");
@@ -42,13 +50,20 @@ router.get("/pgts", async (req, res) => {
   router.put("/pgt/:num_pgt", verificarAutenticacao, async (req, res) => {
     console.log("Rota PUT /pgt/# solicitada");
     try {
-        const num_pgt = req.params.num_pgt;
-        await updatePgt(num_pgt, req.body);
-        res.status(200).json({ message: "Pergunta alterada com sucesso!" });
-    } catch (error) {
-      console.log(error);
-      res.status(error.status || 500).json({ message: error.message || "Erro!" });
-    }
-  });
+      const { id } = req.params;
+      const { pergunta, alternativas } = req.body;
+
+      if (!pergunta || !alternativas || !Array.isArray(alternativas)) {
+          return res.status(400).json({ erro: "Dados inválidos" });
+      }
+
+      await updatePgt(pergunta, alternativas, id);
+      res.status(200).json({ mensagem: "Pergunta e alternativas atualizadas com sucesso!" });
+
+  } catch (error) {
+      console.error("Erro ao atualizar pergunta:", error);
+      res.status(500).json({ erro: "Erro interno ao atualizar pergunta" });
+  }
+});
   
   export default router;

@@ -24,36 +24,27 @@ Retorna todos os cursos e suas informações básicas.
 Cadastra um novo curso.
 
 Exige token de acesso (exclusivo para adminsitradores).
-
+```
 {
-
     "code_curso": "ABCD",
-
     "nome_curso": "Técnico em Alguma Coisa",
-
     "desc_curso": "descrição",
-
     "mcc": "atalho matriz curricular",
-
     "ppc": "atalho ppc"
-
 }
+```
 ### [PUT] /curso/id
 Atualiza os dados de algum curso (via id).
 
 Exige token de acesso.
-
+```
 {
-
     "nome_curso": "Novo Nome",
-
     "desc_curso": "nova descrição",
-
     "mcc": "atalho nova mcc",
-
     "ppc": "atalho novo ppc"
-
 }
+```
 ### [DELETE] /curso/id
 Remove o curso selecionado do BD.
 
@@ -65,10 +56,28 @@ Retorna todas as perguntas do teste e suas alternativas.
 Adiciona uma nova pergunta.
 
 Exige token de acesso.
+```
+{
+   "pergunta": { "num_pgt": 0, "conteudo": "PERGUNTA" },
+   "alternativas": [
+      { "valor": "curso1", "conteudo": "alterativa A" },
+      { "valor": "curso2", "conteudo": "alternativa B" },
+      { "valor": "curso3", "conteudo": "alternativa C" },
+   ]
+}
+```
 ### [PUT] /pgt/num
 Atualiza/altera as informações de uma pergunta já existente.
-
-Exige token de acesso.
+```
+{
+    "pergunta": { "conteudo": "PERGUNTA" },
+    "alternativas": [
+        { "valor": "curso1", "conteudo": "A" },
+        { "valor": "curso2", "conteudo": "B" },
+        { "valor": "curso3", "conteudo": "C" }
+    ]
+}
+```
 ### [DELETE] /pgt/num
 Deleta a pergunta selecionada.
 
