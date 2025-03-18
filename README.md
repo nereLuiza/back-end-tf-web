@@ -89,24 +89,30 @@ Retorna todas as imagens.
 Insere uma nova imagem.
 
 Exige token de acesso.
+```
+{
+    "code_img": 0,
+    "atalho": "/images/nome.jpg"
+}
+```
 ### [PUT] /img/code
 Altera uma imagem pré existente.
 
 Exige token de acesso.
+```
+{
+    "atalho": "/images/nome.jpg"
+}
+```
 ### [DELETE] /img/code
 Remove uma imagem do BD.
 
 Exige token de acesso.
 ### [POST] /login
 Permite o acesso de contas autorizadas à parte administratva.
-
-
-BODY:
-
+```
 {
-
     "email_admin": "teste@email.com",
-
     "senha_admin": "senhateste"
-
 }
+```
