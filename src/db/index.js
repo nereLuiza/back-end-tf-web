@@ -1,5 +1,4 @@
 import pkg from "pg";
-import { allowedNodeEnvironmentFlags } from "process";
 const { Pool } = pkg;
 
 async function connect() {
