@@ -11,7 +11,10 @@ dotenv.config();
 const app = express();
 const port = 3000;
 
-app.use(cors());
+app.use(cors({
+  origin: "https://front-end-tfweb-teste-steel.vercel.app/",
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(routerLogin);
