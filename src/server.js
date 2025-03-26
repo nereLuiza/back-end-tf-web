@@ -1,15 +1,15 @@
 import dotenv from "dotenv";
-import express from "express";
 import routerPgts from "./routes/pgts.js";
 import routerLogin from "./routes/login.js";
 import routerImgs from "./routes/imgs.js";
 import routerCursos from "./routes/cursos.js"
-import cors from "cors";
 
 dotenv.config();
 
 const app = express();
 const port = 3000;
+const express = require("express");
+const cors = require("cors");
 
 app.use(cors({
   origin: "https://front-end-tfweb-teste-steel.vercel.app/",
