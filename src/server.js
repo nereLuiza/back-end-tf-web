@@ -13,20 +13,22 @@ const port = process.env.PORT || 3000;
 
 const allowedOrigins = [
   'https://front-end-tfweb-teste-steel.vercel.app',
-  'https://bookish-train-5gg496xwqv4cv6pj-5501.app.github.dev'
+  'https://bookish-train-5gg496xwqv4cv6pj-5501.app.github.dev',
+  'http://localhost:5500' // Adicione outros ambientes locais
 ];
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Origin', origin);
   }
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
+
   if (req.method === 'OPTIONS') {
-    return res.sendStatus(204);
+    return res.status(204).end();
   }
   next();
 });
