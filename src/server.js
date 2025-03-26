@@ -14,8 +14,9 @@ const express = require("express");
 const cors = require("cors");
 
 app.use(cors({
-  origin: "https://front-end-tfweb-teste-steel.vercel.app/",
-  credentials: true
+  origin: 'https://front-end-tfweb-teste-steel.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
