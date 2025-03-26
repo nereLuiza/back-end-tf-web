@@ -11,19 +11,24 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// 1️⃣ Middleware CORS Personalizado (Solução definitiva)
+const allowedOrigins = [
+  'https://front-end-tfweb-teste-steel.vercel.app',
+  'https://bookish-train-5gg496xwqv4cv6pj-5501.app.github.dev'
+];
+
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://front-end-tfweb-teste-steel.vercel.app');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-access-token');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    
-    // Responde imediatamente para requisições OPTIONS
-    if (req.method === 'OPTIONS') {
-        return res.status(204).send();
-    }
-    
-    next();
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
 });
 
 // 2️⃣ Middlewares essenciais
