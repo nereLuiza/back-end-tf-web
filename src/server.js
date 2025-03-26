@@ -1,40 +1,47 @@
-import dotenv from "dotenv";
-import routerPgts from "./routes/pgts.js";
-import routerLogin from "./routes/login.js";
-import routerImgs from "./routes/imgs.js";
-import routerCursos from "./routes/cursos.js";
-import express from "express";
-import cors from "cors";
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import routerLogin from './routes/login.js';
+import routerPgts from './routes/pgts.js';
+import routerCursos from './routes/cursos.js';
+import routerImgs from './routes/imgs.js';
 
 dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-// Configuração CORS completa
-app.use(cors({
-  origin: 'https://front-end-tfweb-teste-steel.vercel.app',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-access-token'],
-  credentials: true
-}));
+// 1️⃣ Middleware CORS Personalizado (Solução definitiva)
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://front-end-tfweb-teste-steel.vercel.app');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-access-token');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
+    // Responde imediatamente para requisições OPTIONS
+    if (req.method === 'OPTIONS') {
+        return res.status(204).send();
+    }
+    
+    next();
+});
 
+// 2️⃣ Middlewares essenciais
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Rotas
+// 3️⃣ Rotas
 app.use('/login', routerLogin);
-app.use(routerPgts);
 app.use(routerCursos);
 app.use(routerImgs);
+app.use(routerPgts);
 
-app.get("/", (req, res) => {
-  console.log("Rota / solicitada");
-  res.json({
-    nome: "Trabalho Final da disciplina de WEB.",
-  });
+// 4️⃣ Rota de teste CORS
+app.get('/test-cors', (req, res) => {
+    res.json({ message: "CORS configurado com sucesso!" });
 });
 
+// Inicia o servidor
 app.listen(port, () => {
-  console.log(`Serviço escutando na porta: ${port}`); // Corrigido template string
+    console.log(`Servidor rodando na porta ${port}`);
 });
