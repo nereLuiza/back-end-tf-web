@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import routerPgts from "./routes/pgts.js";
 import routerLogin from "./routes/login.js";
 import routerImgs from "./routes/imgs.js";
-import routerCursos from "./routes/cursos.js"
+import routerCursos from "./routes/cursos.js";
 import express from "express";
 import cors from "cors";
 
@@ -10,17 +10,20 @@ dotenv.config();
 
 const app = express();
 const port = 3000;
-const express = require("express");
-const cors = require("cors");
 
+// Configuração CORS completa
 app.use(cors({
   origin: 'https://front-end-tfweb-teste-steel.vercel.app',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-access-token'],
+  credentials: true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(routerLogin);
+
+// Rotas
+app.use('/login', routerLogin);
 app.use(routerPgts);
 app.use(routerCursos);
 app.use(routerImgs);
@@ -33,5 +36,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log("Serviço escutando na porta:  ${port}");
+  console.log(`Serviço escutando na porta: ${port}`); // Corrigido template string
 });
