@@ -3,6 +3,8 @@ import routerPgts from "./routes/pgts.js";
 import routerLogin from "./routes/login.js";
 import routerImgs from "./routes/imgs.js";
 import routerCursos from "./routes/cursos.js"
+import express from "express";
+import cors from "cors";
 
 dotenv.config();
 
