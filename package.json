@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "Back-End do trabalho final da disciplina de WEB",
   "main": "/src/server.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "vercel-build": "echo 'Build completed'"
   },
   "keywords": [],
   "author": "",
