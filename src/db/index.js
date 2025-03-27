@@ -8,10 +8,9 @@ async function connect() {
   return pool.connect();
 }
 
-
 async function autenticarAdmin(email, senha) {
   const client = await connect();
-  const query = "SELECT * FROM usuario WHERE email_admin = $1 AND senha_admin = $2";
+  const query = "SELECT * FROM Admin WHERE email_admin = $1 AND senha_admin = $2";
   const admin = [email, senha];
   const res = await client.query(query, admin);
   return res.rows[0];
@@ -108,13 +107,21 @@ async function updatePgt(data, datalt, id) {
 
 async function deletePgt(id) {
   const client = await connect();
-  const query = "DELETE FROM Perguntas WHERE num_pgt = $1";
-  await client.query(query, [id]);
-  client.release();
 
-  async function deleteAlternativas() {
-    const query2 = "DELETE FROM Alternativas WHERE num_pgt = $1";
-    await client.query(query2, [id]);
+  try {
+    await client.query("BEGIN");
+
+    const deleteAlternativasQuery = "DELETE FROM Alternativas WHERE num_pgt = $1";
+    await client.query(deleteAlternativasQuery, [id]);
+
+    const deletePerguntaQuery = "DELETE FROM Perguntas WHERE num_pgt = $1";
+    await client.query(deletePerguntaQuery, [id]);
+
+    await client.query("COMMIT");
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
     client.release();
   }
 }

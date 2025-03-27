@@ -17,13 +17,13 @@ router.options('/', (req, res) => {
 router.post("/", async (req, res) => {
     try {
         const admin = await autenticarUsuario(req.body.email_admin, req.body.senha_admin);
-        if (admin !== undefined) {
+        if (admin) {
             const token = jwt.sign({ user: admin.email_admin }, process.env.SECRET, {
-                expiresIn: 300,
+                expiresIn: 300, // Token expira em 5 minutos
             });
             res.header('Access-Control-Allow-Origin', 'https://front-end-tfweb-teste-steel.vercel.app');
             res.header('Access-Control-Allow-Credentials', 'true');
-            res.status(202).json({ token: token });
+            res.status(202).json({ token });
         } else {
             res.status(404).json({ message: "Usuário/Senha incorreta!" });
         }
@@ -44,7 +44,7 @@ router.get("/auth", verificarAutenticacao, async (req, res) => {
     try {
         res.header('Access-Control-Allow-Origin', 'https://front-end-tfweb-teste-steel.vercel.app');
         res.header('Access-Control-Allow-Credentials', 'true');
-        res.status(200).json({ user: `${req.userId}` });
+        res.status(200).json({ user: req.userId });
     } catch (error) {
         res.status(error.status || 500).json({ message: error.message || "Erro!" });
     }

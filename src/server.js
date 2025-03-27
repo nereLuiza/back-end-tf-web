@@ -14,12 +14,12 @@ const port = process.env.PORT || 3000;
 const allowedOrigins = [
   'https://front-end-tfweb-teste-steel.vercel.app',
   'https://bookish-train-5gg496xwqv4cv6pj-5501.app.github.dev',
-  'http://localhost:5500' // Adicione outros ambientes locais
+  'http://localhost:5500'
 ];
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
+  if (origin && allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -46,6 +46,12 @@ app.use(routerPgts);
 // 4️⃣ Rota de teste CORS
 app.get('/test-cors', (req, res) => {
     res.json({ message: "CORS configurado com sucesso!" });
+});
+
+// Middleware de tratamento de erros
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Ocorreu um erro no servidor.' });
 });
 
 // Inicia o servidor
